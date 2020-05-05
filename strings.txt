@@ -1,0 +1,7 @@
+# String file for PlayMonitor plugin
+
+PLUGIN_PLAY_MONITOR
+	EN	PlayMonitor
+
+PLUGIN_PLAY_MONITOR_DESC
+	EN	PlayMonitor

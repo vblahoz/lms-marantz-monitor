@@ -1,0 +1,17 @@
+<?xml version='1.0' standalone='yes'?>
+
+<extension>
+    <name>PLUGIN_PLAY_MONITOR</name>
+    <creator>Vladimir Blahoz</creator>
+	<defaultState>enabled</defaultState>
+    <description>PLUGIN_PLAY_MONITOR_DESC</description>
+    <id>PWRMNTRD-6334-4743-95BA-43A60E159561</id>
+    <module>Plugins::PlayMonitor::Plugin</module>
+    <targetApplication>
+        <id>SqueezeCenter</id>
+        <minVersion>7.0a</minVersion>
+        <maxVersion>*</maxVersion>
+    </targetApplication>
+    <type>2</type><!-- type=extension -->
+    <version>1.0</version>
+</extension>
