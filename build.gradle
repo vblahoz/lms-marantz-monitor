@@ -1,0 +1,39 @@
+plugins {
+    id 'org.hidetake.ssh' version '2.10.1'
+}
+
+group 'cz.vblahoz'
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = '6.3'
+}
+
+remotes {
+    bumblebee {
+        host = '192.168.1.2'
+//        port = 1922
+        user = 'admin'
+        identity = file('C:/Users/vblahoz/.ssh/id_rsa')
+    }
+}
+
+
+
+task deploy {
+    doLast {
+        ssh.run {
+            settings {
+                knownHosts = allowAnyHosts
+            }
+            session(remotes.bumblebee) {
+//                new File("${project.rootDir}/PlayMonitor").listFiles().each{
+                    put (from: "${project.rootDir}/PlayMonitor/Plugin.pm", into:'~')
+//                }
+                execute 'sudo synoservice -restart pkgctl-SqueezeCenter'
+            }
+        }
+    }
+}
+
+

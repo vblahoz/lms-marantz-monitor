@@ -1,2 +1,4 @@
 /.idea/
 /lms-playMonitor.iml
+/.gradle/
+/gradle/
