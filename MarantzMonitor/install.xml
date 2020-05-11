@@ -2,12 +2,12 @@
 
 <extension>
     <id>130deea0-f1b7-498c-b8e8-16cc5ac58247</id>
-    <name>PLUGIN_PLAY_MONITOR</name>
+    <name>PLUGIN_MARANTZ_MONITOR</name>
     <creator>Vladimir Blahoz</creator>
 	<defaultState>enabled</defaultState>
-    <description>PLUGIN_PLAY_MONITOR_DESC</description>
+    <description>PLUGIN_MARANTZ_MONITOR_DESC</description>
     <id>PWRMNTRD-6334-4743-95BA-43A60E159561</id>
-    <module>Slim::Plugin::PlayMonitor::Plugin</module>
+    <module>Slim::Plugin::MarantzMonitor::Plugin</module>
     <targetApplication>
         <id>SqueezeCenter</id>
         <minVersion>7.0a</minVersion>

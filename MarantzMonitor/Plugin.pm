@@ -1,4 +1,4 @@
-package Slim::Plugin::PlayMonitor::Plugin;
+package Slim::Plugin::MarantzMonitor::Plugin;
 
 use strict;
 
@@ -27,24 +27,46 @@ sub getFunctions {
 }
 
 sub getDisplayName {
-	return 'PLUGIN_PLAY_MONITOR';
+	return 'PLUGIN_MARANTZ_MONITOR';
 }
+
 
 sub initPlugin {
 	$log->debug("initPlugin");
-	# Subscribe to power events
+
+	# Subscribe to play events
 	Slim::Control::Request::subscribe(
-		\&statusCallback,
+		\&playCallback,
 		[['play']]
+	);
+
+    # Subscribe to power events
+    Slim::Control::Request::subscribe(
+		\&powerCallback,
+		[['power']]
 	);
 }
 
 sub shutdownPlugin {
 	$log->debug("shutdownPlugin");
-	Slim::Control::Request::unsubscribe( \&statusCallback );
+	Slim::Control::Request::unsubscribe( \&playCallback );
+    Slim::Control::Request::unsubscribe( \&powerCallback );
 }
 
-sub statusCallback {
+sub powerCallback {
+    my $request = shift;
+    my $client = $request->client() || return;
+
+    if($client->name() == 'Optimus' && $client->power() != '1') {
+        my %marantzStatus = marantzStatus();
+
+        if($marantzStatus{mode} eq 'Media Player') {
+            turnOffMarantz();
+        }
+    }
+}
+
+sub playCallback {
 	my $request = shift;
 	my $client  = $request->client() || return;
 
@@ -64,6 +86,11 @@ sub statusCallback {
 sub turnOnMarantz {
     $log->debug("Turning ON");
     sendMarantzCommand("cmd0=PutZone_OnOff/ON")
+}
+
+sub turnOffMarantz {
+    $log->debug("Turning OFF");
+    sendMarantzCommand("cmd0=PutZone_OnOff/OFF")
 }
 
 sub switchMarantzMode {

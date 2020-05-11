@@ -1,0 +1,7 @@
+# String file for PlayMonitor plugin
+
+PLUGIN_MARANTZ_MONITOR
+	EN	MarantzMonitor
+
+PLUGIN_MARANTZ_MONITOR_DESC
+	EN	MarantzMonitor
