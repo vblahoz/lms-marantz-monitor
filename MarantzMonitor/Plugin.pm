@@ -12,9 +12,13 @@ use HTTP::Request ();
 use LWP::UserAgent;
 use XML::Simple;
 use Data::Dumper;
+use JSON::XS qw( decode_json );
 
 my $marantzIP = "192.168.1.6";
 my $marantzCommandUrl = "/MainZone/index.put.asp";
+
+my $kodiIP = "192.168.1.5";
+my $kodiRpcUrl = "/jsonrpc";
 
 my $log = Slim::Utils::Log->addLogCategory( {
 	category     => 'plugin.playMonitor',
@@ -59,8 +63,9 @@ sub powerCallback {
 
     if($client->name() == 'Optimus' && $client->power() != '1') {
         my %marantzStatus = marantzStatus();
+        my $kodiStatus = kodiStatus();
 
-        if($marantzStatus{mode} eq 'Media Player') {
+        if($kodiStatus && $marantzStatus{mode} eq 'Media Player') {
             turnOffMarantz();
         }
     }
@@ -122,6 +127,27 @@ sub marantzStatus {
     $log->debug(qq{Marantz status: ${\$on}, Mode: ${\$mode}});
 
     return ('status', $on, 'mode', $mode);
+}
+
+sub kodiStatus {
+    my $url = qq{http://${\$kodiIP}${\$kodiRpcUrl}};
+
+    my $header = ['Content-Type' => 'application/json'];
+
+    my $data = qq{{"jsonrpc": "2.0", "method": "XBMC.GetInfoBooleans", "params":{ "booleans": ["System.ScreenSaverActive"] }, "id": 1}};
+
+    my $r = HTTP::Request->new('POST', $url, $header, $data);
+    my $ua = LWP::UserAgent->new();
+    my $jsonResponse = $ua->request($r)->content();
+
+    $log->debug(qq{Kodi response: ${\$jsonResponse}});
+
+    my $response = decode_json($jsonResponse);
+
+
+    $log->debug(qq{Kodi status response $$response{"result"}{"System.ScreenSaverActive"}});
+
+    return $$response{"result"}{"System.ScreenSaverActive"};
 }
 
 
